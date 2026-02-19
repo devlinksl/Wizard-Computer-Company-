@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse all products at Wizard's Computer Company - Laptops, Desktops, Gaming PCs, Monitors, Keyboards, Batteries, Chargers and more at affordable prices.">
+    <meta name="keywords" content="buy computers, laptops for sale, desktops, gaming PC, computer accessories, batteries, monitors, keyboards, mouse, chargers, Sierra Leone, Freetown, Makeni">
+    <title>Products - Wizard's Computer Company | Computers & Accessories</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .products-page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+        .p-card {
+            background: var(--card-bg, #1a1a2e);
+            border: 1px solid var(--border-color, rgba(255,255,255,0.08));
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .p-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+        }
+        .p-card-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            color: var(--accent, #d4a843);
+            position: relative;
+            overflow: hidden;
+        }
+        .p-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .p-card:hover .p-card-image img {
+            transform: scale(1.05);
+        }
+        .p-card-image .stock-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stock-badge.in-stock {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        .stock-badge.limited {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+        .p-card-body {
+            padding: 20px;
+        }
+        .p-card-category {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent, #d4a843);
+            margin-bottom: 8px;
+        }
+        .p-card-body h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary, #ffffff);
+        }
+        .p-card-body p {
+            font-size: 0.85rem;
+            color: var(--text-secondary, rgba(255,255,255,0.6));
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .p-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px 20px;
+        }
+        .p-card-price {
+            font-size: 0.85rem;
+            color: var(--text-secondary, rgba(255,255,255,0.5));
+            font-weight: 500;
+        }
+        .p-card-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #000;
+            background: var(--accent, #d4a843);
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+        }
+        .p-card-btn:hover {
+            background: var(--accent-hover, #c49a38);
+            transform: translateY(-1px);
+        }
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .filter-btn {
+            padding: 8px 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 30px;
+            border: 1px solid var(--border-color, rgba(255,255,255,0.12));
+            background: transparent;
+            color: var(--text-secondary, rgba(255,255,255,0.6));
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--accent, #d4a843);
+            color: #000;
+            border-color: var(--accent, #d4a843);
+        }
+        .products-count {
+            font-size: 0.85rem;
+            color: var(--text-secondary, rgba(255,255,255,0.5));
+            margin-top: 16px;
+            margin-bottom: 0;
+        }
+        @media (max-width: 768px) {
+            .products-page-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 16px;
+            }
+            .filter-bar {
+                gap: 8px;
+            }
+            .filter-btn {
+                padding: 6px 14px;
+                font-size: 0.75rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .products-page-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fa-solid fa-desktop logo-icon"></i>
+                <span class="logo-text">Wizard's CC</span>
+            </div>
+            <button class="sidebar-close" id="sidebar-close" aria-label="Close sidebar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-link">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </a>
+            <a href="about.html" class="nav-link">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>About</span>
+            </a>
+            <a href="services.html" class="nav-link">
+                <i class="fa-solid fa-gear"></i>
+                <span>Services</span>
+            </a>
+            <a href="products.html" class="nav-link active">
+                <i class="fa-solid fa-laptop"></i>
+                <span>Products</span>
+            </a>
+            <a href="contact.html" class="nav-link">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Contact</span>
+            </a>
+            
+            <div class="nav-divider"></div>
+            
+            <a href="terms.html" class="nav-link nav-link-small">
+                <i class="fa-solid fa-file-contract"></i>
+                <span>Terms of Service</span>
+            </a>
+            <a href="privacy.html" class="nav-link nav-link-small">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Privacy Policy</span>
+            </a>
+            <a href="faq.html" class="nav-link nav-link-small">
+                <i class="fa-solid fa-circle-question"></i>
+                <span>FAQ</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <a href="https://wa.me/23288702625" class="btn btn-gold btn-cta">
+                <i class="fa-brands fa-whatsapp"></i>
+                <span>Order on WhatsApp</span>
+            </a>
+        </div>
+    </aside>
+    
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <header class="mobile-header" id="mobile-header">
+        <div class="mobile-logo">
+            <i class="fa-solid fa-desktop logo-icon"></i>
+            <span>Wizard's CC</span>
+        </div>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </header>
+    
+    <main class="main-content" id="main-content">
+        
+        <!-- Page Header -->
+        <section class="section hero-section" style="padding-bottom: 40px;">
+            <div class="hero-content">
+                <div class="hero-badge fade-in">
+                    <span class="badge"><i class="fa-solid fa-laptop"></i> Our Products</span>
+                </div>
+                <h1 class="hero-title fade-in">
+                    All <span class="highlight">Products</span>
+                </h1>
+                <p class="hero-subtitle fade-in">
+                    Browse our full range of premium computers and accessories. Every product is tested, trusted, and priced affordably. Stock is limited, so order yours today.
+                </p>
+                <div class="hero-cta fade-in">
+                    <a href="https://wa.me/23288702625" class="btn btn-gold btn-lg"><i class="fa-brands fa-whatsapp"></i> Order on WhatsApp</a>
+                    <a href="tel:+23288702625" class="btn btn-secondary btn-lg"><i class="fa-solid fa-phone"></i> Call Now</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Products Grid Section -->
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge fade-in">Browse & Buy</span>
+                    <h2 class="section-title fade-in">Computers & Accessories</h2>
+                    <p class="section-subtitle fade-in">Click on any product to enquire via WhatsApp or call us directly. We also accept walk-in customers at all 3 locations.</p>
+                </div>
+                
+                <!-- Filter Bar -->
+                <div class="filter-bar fade-in">
+                    <button class="filter-btn active" data-filter="all">All Products</button>
+                    <button class="filter-btn" data-filter="laptop">Laptops</button>
+                    <button class="filter-btn" data-filter="desktop">Desktops</button>
+                    <button class="filter-btn" data-filter="gaming">Gaming PCs</button>
+                    <button class="filter-btn" data-filter="monitor">Monitors</button>
+                    <button class="filter-btn" data-filter="accessory">Accessories</button>
+                </div>
+                
+                <p class="products-count fade-in">Showing <span id="product-count">20</span> products</p>
+                
+                <!-- Products Grid -->
+                <div class="products-page-grid fade-in" id="products-grid">
+
+                    <!-- LAPTOPS -->
+                    <div class="p-card" data-category="laptop">
+                        <div class="p-card-image">
+                            <img src="assets/images/hp-laptop.jpg" alt="HP Laptop">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Laptops</span>
+                            <h3>HP Laptop (Various Models)</h3>
+                            <p>Reliable HP laptops for work, school, and everyday use. Multiple configurations available.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20HP%20Laptops" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="laptop">
+                        <div class="p-card-image">
+                            <img src="assets/images/dell-laptop.jpg" alt="Dell Laptop">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Laptops</span>
+                            <h3>Dell Laptop (Various Models)</h3>
+                            <p>Durable Dell laptops built for performance. Great for professionals and students alike.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20Dell%20Laptops" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="laptop">
+                        <div class="p-card-image">
+                            <img src="assets/images/lenovo-laptop.jpg" alt="Lenovo Laptop">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Laptops</span>
+                            <h3>Lenovo Laptop (Various Models)</h3>
+                            <p>Affordable and dependable Lenovo laptops. Perfect for office work and general computing.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20Lenovo%20Laptops" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="laptop">
+                        <div class="p-card-image">
+                            <img src="assets/images/toshiba-laptop.jpg" alt="Toshiba Laptop">
+                            <span class="stock-badge limited">Limited</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Laptops</span>
+                            <h3>Toshiba Laptop (Various Models)</h3>
+                            <p>Classic Toshiba laptops known for reliability. Great value for everyday tasks.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20Toshiba%20Laptops" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <!-- DESKTOPS -->
+                    <div class="p-card" data-category="desktop">
+                        <div class="p-card-image">
+                            <img src="assets/images/desktop-setup.jpg" alt="Complete Desktop Setup">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Desktops</span>
+                            <h3>Complete Desktop Setup</h3>
+                            <p>Full desktop computer with monitor, keyboard, and mouse included. Ready to use out of the box.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20a%20Complete%20Desktop%20Setup" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="desktop">
+                        <div class="p-card-image">
+                            <img src="assets/images/office-desktop.jpg" alt="Office Desktop PC">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Desktops</span>
+                            <h3>Office Desktop PC</h3>
+                            <p>Efficient desktop computers optimized for office productivity, email, and business applications.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20an%20Office%20Desktop%20PC" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="desktop">
+                        <div class="p-card-image">
+                            <img src="assets/images/student-desktop.jpg" alt="Student Desktop PC">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Desktops</span>
+                            <h3>Student Desktop PC</h3>
+                            <p>Budget-friendly desktop for students. Handles schoolwork, browsing, and basic tasks with ease.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20a%20Student%20Desktop%20PC" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <!-- GAMING PCs -->
+                    <div class="p-card" data-category="gaming">
+                        <div class="p-card-image">
+                            <img src="assets/images/gaming-pc.jpg" alt="High-Performance Gaming PC">
+                            <span class="stock-badge limited">Limited</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Gaming PCs</span>
+                            <h3>High-Performance Gaming PC</h3>
+                            <p>Powerful gaming desktops built for serious gamers. High-end graphics and fast processors.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20a%20Gaming%20PC" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="gaming">
+                        <div class="p-card-image">
+                            <img src="assets/images/gaming-laptop.jpg" alt="Gaming Laptop">
+                            <span class="stock-badge limited">Limited</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Gaming PCs</span>
+                            <h3>Gaming Laptop</h3>
+                            <p>Portable gaming power. High-performance laptops with dedicated graphics for gaming on the go.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20a%20Gaming%20Laptop" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <!-- MONITORS -->
+                    <div class="p-card" data-category="monitor">
+                        <div class="p-card-image">
+                            <img src="assets/images/led-monitor.jpg" alt="LED Monitor">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Monitors</span>
+                            <h3>LED Monitor (Various Sizes)</h3>
+                            <p>High-quality LED monitors available in multiple sizes. Crystal-clear display for work and entertainment.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20LED%20Monitors" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="monitor">
+                        <div class="p-card-image">
+                            <img src="assets/images/wide-monitor.jpg" alt="Wide Screen Monitor">
+                            <span class="stock-badge limited">Limited</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Monitors</span>
+                            <h3>Wide Screen Monitor</h3>
+                            <p>Extra-wide monitors for multitasking and immersive viewing. Ideal for professionals and content creators.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20Wide%20Screen%20Monitors" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <!-- ACCESSORIES -->
+                    <div class="p-card" data-category="accessory">
+                        <div class="p-card-image">
+                            <img src="assets/images/laptop-battery.jpg" alt="Laptop Batteries">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Accessories</span>
+                            <h3>Laptop Batteries</h3>
+                            <p>Replacement batteries for HP, Dell, Lenovo, Toshiba, and other major laptop brands.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20need%20a%20Laptop%20Battery" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="accessory">
+                        <div class="p-card-image">
+                            <img src="assets/images/laptop-charger.jpg" alt="Laptop Chargers">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Accessories</span>
+                            <h3>Laptop Chargers</h3>
+                            <p>Original and compatible chargers for all laptop brands. Reliable power supply for your device.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20need%20a%20Laptop%20Charger" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="accessory">
+                        <div class="p-card-image">
+                            <img src="assets/images/computer-mouse.jpg" alt="Computer Mouse">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Accessories</span>
+                            <h3>Computer Mouse</h3>
+                            <p>Wired and wireless mouse options. Optical and ergonomic designs for comfortable use.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20a%20Computer%20Mouse" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="accessory">
+                        <div class="p-card-image">
+                            <img src="assets/images/keyboard.jpg" alt="Keyboards">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Accessories</span>
+                            <h3>Keyboards</h3>
+                            <p>Standard, ergonomic, and wireless keyboards. USB and Bluetooth options available.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20a%20Keyboard" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="accessory">
+                        <div class="p-card-image">
+                            <img src="assets/images/headphones.jpg" alt="Headphones and Earphones">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Accessories</span>
+                            <h3>Headphones & Earphones</h3>
+                            <p>Quality headphones and earphones for calls, music, and gaming. Wired and wireless available.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20Headphones" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="accessory">
+                        <div class="p-card-image">
+                            <img src="assets/images/hard-drive.jpg" alt="External Hard Drives">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Accessories</span>
+                            <h3>External Hard Drives</h3>
+                            <p>Portable external storage for backup and data transfer. Various sizes available.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20External%20Hard%20Drives" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="accessory">
+                        <div class="p-card-image">
+                            <img src="assets/images/usb-drive.jpg" alt="USB Flash Drives and Hubs">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Accessories</span>
+                            <h3>USB Flash Drives & Hubs</h3>
+                            <p>USB flash drives for quick file storage and USB hubs to expand your connectivity.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20interested%20in%20USB%20Drives" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                    <div class="p-card" data-category="accessory">
+                        <div class="p-card-image">
+                            <img src="assets/images/cables.jpg" alt="Cables and Adapters">
+                            <span class="stock-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="p-card-body">
+                            <span class="p-card-category">Accessories</span>
+                            <h3>Cables & Adapters</h3>
+                            <p>HDMI cables, USB cables, VGA adapters, ethernet cables, and all other computer cables you need.</p>
+                        </div>
+                        <div class="p-card-footer">
+                            <span class="p-card-price">Contact for price</span>
+                            <a href="https://wa.me/23288702625?text=Hi%2C%20I%20need%20Cables%20or%20Adapters" class="p-card-btn"><i class="fa-brands fa-whatsapp"></i> Enquire</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        
+        <!-- Can't Find What You Need -->
+        <section class="section section-alt">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge fade-in">Need Something Specific?</span>
+                    <h2 class="section-title fade-in">Can't Find What You're Looking For?</h2>
+                    <p class="section-subtitle fade-in">We stock many more products than what is shown here. Contact us directly and we will help you find exactly what you need at the best price.</p>
+                </div>
+                <div class="content-grid fade-in">
+                    <div class="content-card">
+                        <div class="card-icon">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <h3>WhatsApp Us</h3>
+                        <p>Send us a message on WhatsApp. Tell us what you need and we will respond with availability and pricing.</p>
+                        <a href="https://wa.me/23288702625?text=Hi%2C%20I%20am%20looking%20for%20a%20product" class="btn btn-primary" style="margin-top: 12px;">Message Now</a>
+                    </div>
+                    <div class="content-card">
+                        <div class="card-icon">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <h3>Call Us Directly</h3>
+                        <p>Prefer to talk? Call us directly and our team will assist you in finding the right product at the right price.</p>
+                        <a href="tel:+23288702625" class="btn btn-primary" style="margin-top: 12px;">Call +232 88 702625</a>
+                    </div>
+                    <div class="content-card">
+                        <div class="card-icon">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <h3>Visit Our Shop</h3>
+                        <p>Walk into any of our 3 locations to see our full product range. Our staff will help you find exactly what you need.</p>
+                        <a href="contact.html" class="btn btn-primary" style="margin-top: 12px;">View Locations</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Info & Final CTA -->
+        <section id="contact-info" class="section section-cta">
+            <div class="container">
+                <div class="final-cta fade-in">
+                    <h2>Ready to Buy? Contact Us Now</h2>
+                    <p>Call or WhatsApp us to check availability, ask about pricing, or place an order. We are ready to serve you.</p>
+                    <div class="cta-buttons">
+                        <a href="tel:+23288702625" class="btn btn-gold btn-xl"><i class="fa-solid fa-phone"></i> +232 88 702625</a>
+                        <a href="https://wa.me/23273997045" class="btn btn-outline btn-xl"><i class="fa-brands fa-whatsapp"></i> +232 73 997045</a>
+                    </div>
+                    <p class="cta-note"><i class="fa-solid fa-location-dot"></i> 174 Bai Burrah Road, Portee Wellington, Freetown | 134 Bai Burrah Road, Portee Wellington, Freetown | 23A Cambul Street, Makeni</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <div class="logo">
+                            <i class="fa-solid fa-desktop logo-icon"></i>
+                            <span class="logo-text">Wizard's CC</span>
+                        </div>
+                        <p>Your trusted source for premium quality computers and accessories at affordable prices. Serving Sierra Leone since September 2017.</p>
+                        <div class="footer-social">
+                            <a href="#" aria-label="Facebook">
+                                <i class="fa-brands fa-facebook-f"></i>
+                            </a>
+                            <a href="https://wa.me/23288702625" aria-label="WhatsApp">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a>
+                            <a href="#" aria-label="Instagram">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                            <a href="tel:+23288702625" aria-label="Phone">
+                                <i class="fa-solid fa-phone"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="footer-links">
+                        <div class="footer-column">
+                            <h4>Company</h4>
+                            <ul>
+                                <li><a href="about.html">About Us</a></li>
+                                <li><a href="services.html">Services</a></li>
+                                <li><a href="products.html">Products</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-column">
+                            <h4>Computers</h4>
+                            <ul>
+                                <li><a href="products.html">Laptops</a></li>
+                                <li><a href="products.html">Desktops</a></li>
+                                <li><a href="products.html">Gaming PCs</a></li>
+                                <li><a href="products.html">Office & Student PCs</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-column">
+                            <h4>Accessories</h4>
+                            <ul>
+                                <li><a href="products.html">Batteries & Chargers</a></li>
+                                <li><a href="products.html">Mouse & Keyboards</a></li>
+                                <li><a href="products.html">Monitors & Screens</a></li>
+                                <li><a href="products.html">Other Accessories</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-column">
+                            <h4>Contact</h4>
+                            <ul>
+                                <li><a href="tel:+23288702625">+232 88 702625</a></li>
+                                <li><a href="tel:+23273997045">+232 73 997045</a></li>
+                                <li><a href="contact.html">Send a Message</a></li>
+                                <li><a href="faq.html">FAQ</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Wizard's Computer Company. All rights reserved. Founded September 2017. Locations: 174 Bai Burrah Rd & 134 Bai Burrah Rd, Portee Wellington, Freetown | 23A Cambul Street, Makeni.</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+    
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Product filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const productCards = document.querySelectorAll('.p-card');
+            const productCount = document.getElementById('product-count');
+
+            filterBtns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(function(b) { b.classList.remove('active'); });
+                    btn.classList.add('active');
+
+                    var filter = btn.getAttribute('data-filter');
+                    var count = 0;
+
+                    productCards.forEach(function(card) {
+                        if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                            card.style.display = '';
+                            count++;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    if (productCount) {
+                        productCount.textContent = count;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
